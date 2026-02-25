@@ -6,6 +6,8 @@ A Chrome extension that adds a volume slider and mute button to [KEXP.org](https
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-34A853)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
+![KEXP Volume Control screenshot](images/Screenshot%202026-02-25%20143556.png)
+
 ## Features
 
 - **Volume slider** — drag to adjust, click to jump, scroll wheel to nudge
