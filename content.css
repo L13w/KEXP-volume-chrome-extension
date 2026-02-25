@@ -1,0 +1,94 @@
+/* Container for the volume control — aligns with KEXP logo text baseline */
+.kexp-vol-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 0;
+  height: 16px;
+  user-select: none;
+}
+
+/* Speaker/mute icon button */
+.kexp-vol-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.kexp-vol-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+  transition: fill 0.15s;
+}
+
+.kexp-vol-btn:hover svg {
+  fill: #f0a82d;
+}
+
+/* Slider track container */
+.kexp-vol-slider {
+  position: relative;
+  width: 70px;
+  height: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Background track */
+.kexp-vol-track {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #555;
+  border-radius: 2px;
+}
+
+/* Filled portion */
+.kexp-vol-fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  background: #f0a82d;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: background 0.15s;
+}
+
+.kexp-vol-wrap.muted .kexp-vol-fill {
+  background: #777;
+}
+
+/* Thumb knob */
+.kexp-vol-thumb {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.kexp-vol-slider:hover .kexp-vol-thumb,
+.kexp-vol-slider.dragging .kexp-vol-thumb {
+  opacity: 1;
+}
+
+.kexp-vol-slider:focus-visible {
+  outline: 2px solid #f0a82d;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
