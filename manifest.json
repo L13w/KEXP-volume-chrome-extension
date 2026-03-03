@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "KEXP Volume Control",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adds a volume slider and mute button to KEXP.org's player bar.",
   "content_scripts": [
     {
