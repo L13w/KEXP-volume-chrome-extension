@@ -1,16 +1,19 @@
-/* Container for the volume control — aligns with KEXP logo text baseline */
+/* Container for the vertical volume control — centered between logo and play button */
 .kexp-vol-wrap {
+  position: absolute;
+  left: 7rem;
+  top: calc(1.75rem - 8px);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 4px;
-  margin-top: 6px;
   padding: 0;
-  height: 16px;
   user-select: none;
+  z-index: 10;
+  transform: translateX(-50%);
 }
 
-/* Speaker/mute icon button */
+/* Speaker/mute icon button (at bottom of vertical control) */
 .kexp-vol-btn {
   background: none;
   border: none;
@@ -34,31 +37,31 @@
   fill: #f0a82d;
 }
 
-/* Slider track container */
+/* Vertical slider track container */
 .kexp-vol-slider {
   position: relative;
-  width: 70px;
-  height: 16px;
+  width: 16px;
+  height: 70px;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  justify-content: center;
 }
 
-/* Background track */
+/* Background track (vertical) */
 .kexp-vol-track {
   position: absolute;
-  left: 0;
-  width: 100%;
-  height: 4px;
+  top: 0;
+  width: 4px;
+  height: 100%;
   background: #555;
   border-radius: 2px;
 }
 
-/* Filled portion */
+/* Filled portion (grows from bottom) */
 .kexp-vol-fill {
   position: absolute;
-  left: 0;
-  height: 4px;
+  bottom: 0;
+  width: 4px;
   background: #f0a82d;
   border-radius: 2px;
   pointer-events: none;
@@ -69,14 +72,14 @@
   background: #777;
 }
 
-/* Thumb knob */
+/* Thumb knob (positioned vertically) */
 .kexp-vol-thumb {
   position: absolute;
   width: 12px;
   height: 12px;
   background: #fff;
   border-radius: 50%;
-  transform: translateX(-50%);
+  transform: translateY(50%);
   opacity: 0;
   transition: opacity 0.15s;
   pointer-events: none;

@@ -85,6 +85,7 @@
     slider.setAttribute("aria-valuemin", "0");
     slider.setAttribute("aria-valuemax", "100");
     slider.setAttribute("aria-valuenow", "100");
+    slider.setAttribute("aria-orientation", "vertical");
     slider.tabIndex = 0;
 
     const track = document.createElement("div");
@@ -100,41 +101,25 @@
     slider.appendChild(fill);
     slider.appendChild(thumb);
 
-    wrap.appendChild(btn);
+    // Vertical layout: slider on top, mute button at bottom
     wrap.appendChild(slider);
+    wrap.appendChild(btn);
 
     return { wrap, btn, slider, fill, thumb };
   }
 
-  // ── Find Player Bar & Inject ─────────────────────────────────────────
-
-  function findPlayButton() {
-    // Target the specific KEXP play/pause button by its data attribute
-    const btn = document.querySelector("button[data-play-button]");
-    if (btn) return btn;
-
-    // Fallback: target by class name
-    const ctaBtn = document.querySelector("button.Player-ctaButton");
-    if (ctaBtn) return ctaBtn;
-
-    return null;
-  }
+  // ── Inject Into Header ───────────────────────────────────────────────
 
   function injectVolumeControl(ui) {
-    const playBtn = findPlayButton();
-    if (!playBtn) return false;
-
     if (document.querySelector(".kexp-vol-wrap")) return true;
 
-    // The play button lives in div.Player-cta (inline-block, text-align: center).
-    // Just append the volume control after the button — it will naturally
-    // appear below it and inherit the parent's center alignment.
-    const parent = playBtn.parentElement;
-    if (parent) {
-      parent.insertBefore(ui.wrap, playBtn.nextSibling);
-      return true;
-    }
-    return false;
+    // Place the volume control inside the header, next to the KEXP logo
+    const header = document.getElementById("global-header");
+    const container = header && header.querySelector(".Container");
+    if (!container) return false;
+
+    container.appendChild(ui.wrap);
+    return true;
   }
 
   // ── Volume State & Persistence ───────────────────────────────────────
@@ -146,8 +131,8 @@
 
   function updateUI(ui) {
     const pct = currentVolume + "%";
-    ui.fill.style.width = pct;
-    ui.thumb.style.left = pct;
+    ui.fill.style.height = pct;
+    ui.thumb.style.bottom = pct;
 
     const iconState = getIconState(currentVolume, isMuted);
     if (iconState !== lastIconState) {
@@ -191,9 +176,10 @@
     }
   }
 
-  function setVolumeFromSlider(slider, clientX) {
+  // Vertical slider: map clientY to volume percentage (top=100%, bottom=0%)
+  function setVolumeFromSlider(slider, clientY) {
     const rect = slider.getBoundingClientRect();
-    let pct = ((clientX - rect.left) / rect.width) * 100;
+    let pct = ((rect.bottom - clientY) / rect.height) * 100;
     pct = Math.max(0, Math.min(100, Math.round(pct)));
     currentVolume = pct;
     if (isMuted && pct > 0) {
@@ -224,7 +210,7 @@
 
     // Slider drag — add/remove document listeners dynamically
     function onMouseMove(e) {
-      setVolumeFromSlider(ui.slider, e.clientX);
+      setVolumeFromSlider(ui.slider, e.clientY);
       updateUI(ui);
     }
 
@@ -238,7 +224,7 @@
     ui.slider.addEventListener("mousedown", (e) => {
       e.preventDefault();
       ui.slider.classList.add("dragging");
-      setVolumeFromSlider(ui.slider, e.clientX);
+      setVolumeFromSlider(ui.slider, e.clientY);
       updateUI(ui);
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
@@ -260,11 +246,11 @@
       { passive: false }
     );
 
-    // Keyboard support for slider
+    // Keyboard support for vertical slider
     ui.slider.addEventListener("keydown", (e) => {
       let delta = 0;
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") delta = 5;
-      else if (e.key === "ArrowLeft" || e.key === "ArrowDown") delta = -5;
+      if (e.key === "ArrowUp" || e.key === "ArrowRight") delta = 5;
+      else if (e.key === "ArrowDown" || e.key === "ArrowLeft") delta = -5;
       else if (e.key === "Home") { currentVolume = 0; delta = null; }
       else if (e.key === "End") { currentVolume = 100; delta = null; }
       else return;
