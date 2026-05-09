@@ -27,6 +27,7 @@
   let lastSeenType = null;
   let pollTimer = null;
   let failCount = 0;
+  let wasUnreachable = false;
   let onModeChange = () => {}; // UI hook, set in a later task
 
   function setMute(value) {
@@ -39,10 +40,17 @@
     const top = await fetchTopPlay();
     if (!top) {
       failCount++;
-      if (failCount >= FAIL_THRESHOLD) onModeChange(mode, { unreachable: true });
+      if (failCount >= FAIL_THRESHOLD && !wasUnreachable) {
+        wasUnreachable = true;
+        onModeChange(mode, { unreachable: true });
+      }
       return;
     }
     failCount = 0;
+    if (wasUnreachable) {
+      wasUnreachable = false;
+      onModeChange(mode, {});
+    }
 
     if (top.id === anchorId) return;
 
@@ -87,6 +95,7 @@
     anchorId = top.id;
     lastSeenType = top.play_type;
     failCount = 0;
+    wasUnreachable = false;
     startPolling();
     onModeChange(mode, {});
   }
@@ -96,6 +105,7 @@
     anchorId = null;
     lastSeenType = null;
     failCount = 0;
+    wasUnreachable = false;
     stopPolling();
     setMute(false);
     onModeChange(mode, {});
@@ -217,6 +227,7 @@
     anchorId = top.id;
     lastSeenType = top.play_type;
     failCount = 0;
+    wasUnreachable = false;
     // Already muted; no setMute call needed.
     onModeChange(mode, {});
   }
