@@ -76,13 +76,17 @@
   }
 
   async function enterSkipMode(nextMode) {
+    // Mute synchronously so the click feels instant, even on slow networks.
+    setMute(true);
     const top = await fetchTopPlay();
-    if (!top) return;             // can't anchor; do nothing
+    if (!top) {
+      setMute(false);             // can't anchor; revert
+      return;
+    }
     mode = nextMode;
     anchorId = top.id;
     lastSeenType = top.play_type;
     failCount = 0;
-    setMute(true);
     startPolling();
     onModeChange(mode, {});
   }
