@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "KEXP Volume Control",
-  "version": "1.1.0",
-  "description": "Adds a volume slider and mute button to KEXP.org's player bar.",
+  "name": "KEXP Skip Buttons",
+  "version": "2.0.0",
+  "description": "Adds Skip Song and Skip Block buttons to KEXP.org that mute the stream until the next song or the next block.",
   "content_scripts": [
     {
       "matches": ["*://*.kexp.org/*"],
