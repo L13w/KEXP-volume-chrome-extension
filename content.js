@@ -4,6 +4,21 @@
   const POLL_INTERVAL = 500;
   const POLL_TIMEOUT = 30000;
 
+  const PLAYLIST_URL = "https://api.kexp.org/v2/plays/?limit=1";
+
+  async function fetchTopPlay() {
+    try {
+      const res = await fetch(PLAYLIST_URL, { cache: "no-store" });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const top = data && data.results && data.results[0];
+      if (!top) return null;
+      return { id: top.id, play_type: top.play_type };
+    } catch (e) {
+      return null;
+    }
+  }
+
   let player = null;
 
   // ── Player Detection ─────────────────────────────────────────────────
