@@ -136,6 +136,59 @@
     });
   }
 
+  // ── SVG Icons ────────────────────────────────────────────────────────
+
+  function iconSkipOne() {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/>' +
+      '<line x1="14" y1="8" x2="20" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<line x1="20" y1="8" x2="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<polyline points="22,8 22,16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  function iconSkipMany() {
+    return '<svg viewBox="0 0 28 24" aria-hidden="true">' +
+      '<path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor"/>' +
+      '<line x1="14" y1="8" x2="20" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<line x1="20" y1="8" x2="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<polyline points="22,8 22,16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<polyline points="26,8 26,16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  // ── Build UI ─────────────────────────────────────────────────────────
+
+  function createSkipButtons() {
+    const wrap = document.createElement("div");
+    wrap.className = "kexp-skip-wrap";
+
+    const songBtn = document.createElement("button");
+    songBtn.className = "kexp-skip-btn kexp-skip-song";
+    songBtn.type = "button";
+    songBtn.title = "Mute until the next playlist entry begins";
+    songBtn.innerHTML = iconSkipOne() + '<span>SKIP SONG</span>';
+
+    const blockBtn = document.createElement("button");
+    blockBtn.className = "kexp-skip-btn kexp-skip-block";
+    blockBtn.type = "button";
+    blockBtn.title = "Mute through the rest of this block and the next air break";
+    blockBtn.innerHTML = iconSkipMany() + '<span>SKIP BLOCK</span>';
+
+    wrap.appendChild(songBtn);
+    wrap.appendChild(blockBtn);
+    return { wrap, songBtn, blockBtn };
+  }
+
+  function injectSkipButtons(ui) {
+    if (document.querySelector(".kexp-skip-wrap")) return true;
+    const header = document.getElementById("global-header");
+    const container = header && header.querySelector(".Container");
+    if (!container) return false;
+    container.appendChild(ui.wrap);
+    return true;
+  }
+
   // ── Init ─────────────────────────────────────────────────────────────
 
   async function init() {
@@ -144,7 +197,28 @@
     } catch (e) {
       return;
     }
-    // UI and state machine come in later tasks.
+
+    const ui = createSkipButtons();
+
+    if (!injectSkipButtons(ui)) {
+      const obs = new MutationObserver(() => {
+        if (injectSkipButtons(ui)) obs.disconnect();
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // Re-inject on SPA navigation, debounced.
+    let reTimer = null;
+    const reObs = new MutationObserver(() => {
+      if (reTimer) return;
+      reTimer = setTimeout(() => {
+        reTimer = null;
+        if (!document.querySelector(".kexp-skip-wrap")) {
+          injectSkipButtons(ui);
+        }
+      }, 500);
+    });
+    reObs.observe(document.body, { childList: true, subtree: true });
   }
 
   init();

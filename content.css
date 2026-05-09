@@ -1,1 +1,59 @@
-/* KEXP Skip Buttons — styles added in later tasks */
+/* Wrap: vertical stack at the v1 volume-control anchor point. */
+.kexp-skip-wrap {
+  position: absolute;
+  left: 7rem;
+  top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+.kexp-skip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(240, 168, 45, 0.4);
+  border-radius: 999px;
+  font: 600 9px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, background 150ms;
+}
+
+.kexp-skip-btn svg {
+  width: 14px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.kexp-skip-block svg {
+  width: 16px;
+}
+
+.kexp-skip-btn:hover {
+  color: #f0a82d;
+  border-color: #f0a82d;
+}
+
+.kexp-skip-btn.active {
+  background: #f0a82d;
+  color: #111;
+  border-color: #f0a82d;
+  animation: kexp-skip-pulse 1.6s ease-in-out infinite;
+}
+
+.kexp-skip-btn.unreachable {
+  opacity: 0.5;
+}
+
+@keyframes kexp-skip-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.85; }
+}
