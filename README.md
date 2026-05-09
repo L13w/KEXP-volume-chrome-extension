@@ -1,21 +1,16 @@
-# KEXP Volume Control
+# KEXP Skip Buttons
 
-A Chrome extension that adds a volume slider and mute button to [KEXP.org](https://www.kexp.org)'s player bar. KEXP streams great music 24/7 but doesn't offer a volume control on their website — this fixes that.
+A Chrome extension that adds two skip buttons to [KEXP.org](https://www.kexp.org)'s player bar. KEXP added their own volume control upstream, so this extension was repurposed: it now lets you mute the stream when you don't like what's playing — one button skips the current song, the other skips the rest of the current block.
 
-![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
-![Manifest V3](https://img.shields.io/badge/Manifest-V3-34A853)
-![License](https://img.shields.io/badge/license-MIT-blue)
-
-![KEXP Volume Control screenshot](images/Screenshot%202026-02-25%20143556.png)
+![KEXP Skip Buttons screenshot](images/Screenshot%202026-02-25%20143556.png)
 
 ## Features
 
-- **Volume slider** — drag to adjust, click to jump, scroll wheel to nudge
-- **Mute toggle** — click the speaker icon; unmuting restores your previous level
-- **Remembers your settings** — volume and mute state persist across sessions
-- **Keyboard accessible** — arrow keys, Home/End when the slider is focused
+- **Skip Song** — mutes until the next playlist entry begins
+- **Skip Block** — mutes through the rest of this block and the next air break
+- **Automatic unmute** — the stream comes back on its own once the skip target is reached
+- **Lightweight** — vanilla JS, no dependencies, no background scripts
 - **Looks native** — matches KEXP's dark theme and gold accent color
-- **Lightweight** — no background scripts, no popups, no network requests
 
 ## Install
 
@@ -29,25 +24,14 @@ A Chrome extension that adds a volume slider and mute button to [KEXP.org](https
 
 ## How it works
 
-The extension injects a content script into KEXP.org pages that:
-
-1. Waits for KEXP's JW Player audio player to initialize
-2. Creates a volume slider + mute button and places it below the play/pause button
-3. Hooks into JW Player's API (`setVolume`, `setMute`, event listeners) for real-time control
-4. Saves your volume preference to `localStorage` so it persists between visits
-
-The entire extension is three files — `manifest.json`, `content.js`, and `content.css` — with zero dependencies.
+While a skip mode is active, the extension polls `https://api.kexp.org/v2/plays/?limit=1` every 10 seconds and unmutes when the appropriate playlist transition is observed — the next song for Skip Song, or the next track after the next airbreak for Skip Block.
 
 ## Controls
 
-| Action | Effect |
+| Button | Effect |
 |--------|--------|
-| Drag slider | Adjust volume 0–100% |
-| Click slider track | Jump to that volume level |
-| Click speaker icon | Toggle mute/unmute |
-| Scroll wheel (over control) | Nudge volume +/- 5% |
-| Arrow keys (when focused) | Nudge volume +/- 5% |
-| Home / End (when focused) | Min / max volume |
+| Skip Song | Mute until the next playlist entry begins |
+| Skip Block | Mute through the rest of this block and the next air break |
 
 ## License
 
