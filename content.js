@@ -189,6 +189,54 @@
     return true;
   }
 
+  function wireButtons(ui) {
+    function onClick(targetMode) {
+      return (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (mode === targetMode) {
+          exitSkipMode();
+        } else if (mode === "idle") {
+          enterSkipMode(targetMode);
+        } else {
+          // Switch from one active mode to the other; stay muted.
+          // exitSkipMode unmutes, so do an in-place switch instead.
+          switchSkipMode(targetMode);
+        }
+      };
+    }
+    ui.songBtn.addEventListener("click", onClick("skip-song"));
+    ui.blockBtn.addEventListener("click", onClick("skip-block"));
+  }
+
+  async function switchSkipMode(nextMode) {
+    const top = await fetchTopPlay();
+    if (!top) return;
+    mode = nextMode;
+    anchorId = top.id;
+    lastSeenType = top.play_type;
+    failCount = 0;
+    // Already muted; no setMute call needed.
+    onModeChange(mode, {});
+  }
+
+  function renderModeChange(ui) {
+    return (currentMode, flags) => {
+      ui.songBtn.classList.toggle("active", currentMode === "skip-song");
+      ui.blockBtn.classList.toggle("active", currentMode === "skip-block");
+      const unreachable = !!(flags && flags.unreachable);
+      ui.songBtn.classList.toggle("unreachable", unreachable && currentMode === "skip-song");
+      ui.blockBtn.classList.toggle("unreachable", unreachable && currentMode === "skip-block");
+      if (unreachable) {
+        const which = currentMode === "skip-song" ? ui.songBtn : ui.blockBtn;
+        which.title = "Playlist unreachable — click to cancel and unmute";
+      } else {
+        ui.songBtn.title = "Mute until the next playlist entry begins";
+        ui.blockBtn.title = "Mute through the rest of this block and the next air break";
+      }
+    };
+  }
+
   // ── Init ─────────────────────────────────────────────────────────────
 
   async function init() {
@@ -199,6 +247,8 @@
     }
 
     const ui = createSkipButtons();
+    wireButtons(ui);
+    onModeChange = renderModeChange(ui);
 
     if (!injectSkipButtons(ui)) {
       const obs = new MutationObserver(() => {
