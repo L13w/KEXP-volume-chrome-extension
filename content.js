@@ -97,9 +97,6 @@
     onModeChange(mode, {});
   }
 
-  // Expose for manual console testing during development.
-  window.__kexpSkip = { enterSkipMode, exitSkipMode, get mode() { return mode; } };
-
   let player = null;
 
   // ── Player Detection ─────────────────────────────────────────────────
