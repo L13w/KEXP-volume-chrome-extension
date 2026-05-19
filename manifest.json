@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "KEXP Skip Buttons",
-  "version": "2.0.0",
-  "description": "Adds Skip Song and Skip Block buttons to KEXP.org that mute the stream until the next song or the next block.",
+  "name": "KEXP Skip",
+  "version": "1.0.0",
+  "description": "Two skip buttons for KEXP.org — mute until the next song, or through the rest of this block of music.",
   "content_scripts": [
     {
       "matches": ["*://*.kexp.org/*"],

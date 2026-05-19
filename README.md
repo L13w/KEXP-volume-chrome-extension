@@ -1,4 +1,4 @@
-# KEXP Skip Buttons
+# KEXP Skip
 
 A Chrome extension that adds two skip buttons to [KEXP.org](https://www.kexp.org)'s player bar. KEXP added their own volume control upstream, so this extension was repurposed: it now lets you mute the stream when you don't like what's playing — one button skips the current song, the other skips the rest of the current block.
 
