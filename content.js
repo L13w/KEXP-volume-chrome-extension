@@ -193,9 +193,9 @@
 
   function injectSkipButtons(ui) {
     if (document.querySelector(".kexp-skip-wrap")) return true;
-    const toggle = document.querySelector("#global-header .PlayerControlTray .PlayerControlTray-toggle");
-    if (!toggle || !toggle.parentNode) return false;
-    toggle.parentNode.insertBefore(ui.wrap, toggle);
+    const volume = document.querySelector(".PlayerVolume");
+    if (!volume || !volume.parentNode) return false;
+    volume.parentNode.insertBefore(ui.wrap, volume);
     return true;
   }
 
