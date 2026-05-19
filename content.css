@@ -1,13 +1,11 @@
-/* Wrap: vertical stack at the v1 volume-control anchor point. */
+/* Wrap: vertical stack, sits inline immediately left of KEXP's volume tray. */
 .kexp-skip-wrap {
-  position: absolute;
-  left: 7rem;
-  top: 1.4rem;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: 4px;
-  z-index: 10;
-  transform: translateX(-50%);
+  margin-right: 12px;
+  align-self: center;
+  vertical-align: middle;
   user-select: none;
 }
 
