@@ -193,10 +193,9 @@
 
   function injectSkipButtons(ui) {
     if (document.querySelector(".kexp-skip-wrap")) return true;
-    const header = document.getElementById("global-header");
-    const container = header && header.querySelector(".Container");
-    if (!container) return false;
-    container.appendChild(ui.wrap);
+    const toggle = document.querySelector("#global-header .PlayerControlTray .PlayerControlTray-toggle");
+    if (!toggle || !toggle.parentNode) return false;
+    toggle.parentNode.insertBefore(ui.wrap, toggle);
     return true;
   }
 
@@ -228,7 +227,7 @@
     lastSeenType = top.play_type;
     failCount = 0;
     wasUnreachable = false;
-    // Already muted; no setMute call needed.
+    // Already muted and polling; no setMute or startPolling needed.
     onModeChange(mode, {});
   }
 
